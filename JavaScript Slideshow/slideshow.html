@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lab 6</title>
+	<style type="text/css">
+		
+	body{
+		margin: 0;
+	}
+
+	.mainImage .currentImage{
+		margin-right: auto;
+		margin-left: auto;
+		display: block;
+		height: 50%;
+		width: 50%;
+	}
+
+	.mainImage .number{
+		color: lightgrey;		
+		font-size: 23px;
+		padding: 10px 900px;
+		position: absolute;
+		top: 0%;
+	}
+
+	.controls{
+		margin-top: 2%;
+		margin-left: auto;
+		margin-right: auto;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.controls .play{
+		
+		height: 20px;
+		width: 20px;
+		border-radius: 50%;
+		border: none;
+		margin-right: 5%;
+	}
+
+	.controls .play:hover{
+		cursor: pointer;
+	}
+
+	.controls .timerInput{
+		height:50%;
+	}
+
+	.controls .checkbox{
+		margin-right: 5%;
+	}
+
+	</style>
+</head>
+<body>
+<div class="mainImage">
+	<div class="number" id="message"></div>
+	<img class="currentImage" name="slide"/>
+</div>
+<div class="controls">
+	<button class="play" onclick="play()" id="playBtn"></button>
+	Replay <input type="checkbox" class="checkbox" id="checkId" onclick="check()">
+	Timer: <input type="number" id="textId" class="timerInput"> 
+	<button type="button" onclick="updateTimer()" class="timerInput">Update</button>
+</div>
+<script type="text/javascript">
+	var slides = ['img1.jpg','img2.jpg','img4.jpg','img5.jpg'];
+	var i = 0;
+	var nb = 0;
+	var time = 1000;
+	var playing = true;
+	var checkbox = document.getElementById("checkId");
+	var playBtn = document.getElementById("playBtn");
+	playBtn.style.background = "url(pause.png)";
+	
+
+	function updateTimer(){
+		var newTime;
+		newTime = document.getElementById("textId").value;
+		if(isNaN(newTime) || newTime < 0){
+			alert("Invalid input! Try again!");
+			return false;
+		}
+		else{
+			time = newTime;
+		}
+	}
+
+	function changeImg(){
+		document.slide.src = slides[i];
+		nb = i + 1;
+		document.getElementById("message").innerHTML = nb + '/' + slides.length;
+		if (i < slides.length - 1){
+			i++;
+		}
+		else{
+			if (checkbox.checked == true){
+				i = 0;
+			}
+		}
+
+		playPause = setTimeout("changeImg()", time);
+	}
+
+	function play(){
+		if (playing == true){
+			playing = false;
+			clearTimeout(playPause);
+			playBtn.style.background = "url(play.png)";
+		}
+		else{
+			playing = true;
+			setTimeout("changeImg()", time);
+			playBtn.style.background = "url(pause.png)";
+		}
+	}
+
+
+
+	window.onload = changeImg;
+</script>
+</body>
+</html>

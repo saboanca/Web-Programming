@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lab 7</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<style>
+	
+	body{
+		background-color: lightblue;
+	}
+	
+	h1{
+		text-align: center;
+		margin-bottom: 50px;
+		color: darkslateblue;
+	}
+
+	.mainDiv{
+		margin-left: auto;
+		margin-right: auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+
+	#image{
+		background-color: white;
+		border: solid 3px darkslateblue;
+		border-radius: 5px;
+	}
+
+	#puzzle{
+		height: 400px;
+		width: 400px;
+		display: flex;
+		flex-wrap: wrap;
+		border: solid 3px darkslateblue;
+		border-radius: 3px;
+		background-color: white;
+	}
+
+	.tutorial{
+		height: 20px;
+		width: 300px;
+		text-align: center;
+		background-color: cornflowerblue;
+		border: solid 1px darkslateblue;
+	}
+
+	.tutorial:hover{
+		cursor: pointer;
+	}
+
+	.mainDiv .panel{
+		display: block;
+		height: 100;
+		width: 300px;
+	}
+
+	#description{
+		width: 300px;
+		display: none;
+		background-color: cornflowerblue;
+		border: solid 1px darkslateblue;
+		text-align: center;
+	}
+
+	</style>
+</head>
+<body onload="populateWindow()">
+	<h1>PUZZLE</h1>
+	<div class="mainDiv">
+		<div class="panel">
+			<div class="tutorial">Tutorial</div>
+			<div id="description"><p>1. Select a puzzle piece<br>2. Select the piece you want to swap it with<br>3. Repeat until the puzzle is completed</p></div>
+		</div>
+		<div class="p">
+			<div id="puzzle">
+				<img id="0">
+				<img id="1">
+				<img id="2">
+				<img id="3">
+
+				<img id="4">
+				<img id="5">
+				<img id="6">
+				<img id="7">
+
+				<img id="8">
+				<img id="9">
+				<img id="10">
+				<img id="11">
+
+				<img id="12">
+				<img id="13">
+				<img id="14">
+				<img id="15">
+			</div>
+		</div>
+		<img id="image">
+	</div>
+
+	<script>
+		var pieceArray = [];
+		var src0 = "";
+		var src1 = "";
+		var id0 = -1;
+		var id1 = -1;
+		var selected = 0;
+		var p;
+
+		function populateArray(){
+			var i, str;
+
+			for (i = 0; i < 16; i++){
+				pieceArray[i] = i;
+			}
+		}
+
+		function shuffleArray(){
+			var i, aux, rnd;
+
+			for (i = 0; i < 16; i++){
+				rnd = Math.floor(Math.random() * 15);
+				aux = pieceArray[rnd];
+				pieceArray[rnd] = pieceArray[i];
+				pieceArray[i] = aux;
+			}
+		}
+
+		function displayShuffledPieces(){
+			var i, j, str;
+
+			shuffleArray();
+			for (i = 0; i < 16; i++){
+				str = "#" + i;
+				j = pieceArray[i];
+				$(str).attr("id", i + "");
+				$(str).attr("src", j + ".png");
+				$(str).attr("height", "100");
+				$(str).attr("width", "100");
+				$(str).css("cursor", "pointer");
+				$(str).click(function(){
+					swapPieces(this);
+				});
+				
+			}			
+		}
+
+		function swapPieces(str){
+			if (selected == 0){
+				selected = 1;
+				src0 = $(str).attr("src");
+				p = str;
+			}
+			else{
+				selected = 0;
+				src1 = $(str).attr("src");
+				$(p).attr("src", src1);
+				$(str).attr("src", src0);
+				
+				var i;
+				var ok = 1;
+				for (i = 0; i < 16; i++){
+					str = "#" + i;
+
+					var source = $(str).attr("src");
+					var id = $(str).attr("id") + ".png";
+					if (id != source){
+						ok = 0;
+					}
+				}
+				if (ok == 1){
+					$(".mainDiv").each(function(){
+						alert("CONGRATULATIONS");
+					})
+					for (i = 0; i < 16; i++){
+						var string = "#" + i;
+						$(string).off("click");
+					}
+				}
+			}
+		}
+
+		function loadImage(){
+			$("#image").attr("src", "puzzle.png");
+			$("#image").attr("height", "400");
+			$("#image").attr("weight", "400");
+			
+		}
+
+		function loadPanel(){
+			$(".tutorial").click(function(){
+				$("#description").slideToggle("slow");
+			});
+		}
+
+		function populateWindow(){
+			loadPanel();
+			populateArray();
+			loadImage();
+			displayShuffledPieces();
+		}
+	</script>
+</body>
+</html>
